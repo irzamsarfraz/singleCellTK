@@ -83,6 +83,7 @@ source("ui_05_2_mast.R", local = TRUE) #creates shinyPanelMAST variable
 source("ui_06_1_pathway.R", local = TRUE) #creates shinyPanelPathway variable
 source("ui_06_2_enrichR.R", local = TRUE) #creates shinyPanelEnrichR variable
 source("ui_07_subsample.R", local = TRUE) #creates shinyPanelSubsample variable
+source("ui_08_seurat.R", local = TRUE) #creates shinyPanelSeurat variable
 
 if (is.null(getShinyOption("includeVersion"))){
   tooltitle <- paste("Single Cell Toolkit v",
@@ -122,6 +123,7 @@ shinyUI(
       tabPanel("EnrichR", shinyPanelEnrichR)
     ),
     tabPanel("Sample Size", shinyPanelSubsample),
+    tabPanel("Seurat", shinyPanelSeurat),
     footer = includeHTML("www/footer.html")
   )
 )
