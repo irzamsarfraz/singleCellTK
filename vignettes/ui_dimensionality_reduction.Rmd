@@ -1,0 +1,35 @@
+---
+title: "Dimensionality Reduction"
+author: "Irzam Sarfraz"
+---
+```{r develSetting, include=FALSE}
+doEval = TRUE
+```
+## Introduction
+Feature selection and dimensionality reduction' often go hand in hand and as such, `singleCellTK` offers access to the most commonly used dimensionality reduction methods i.e. `PCA` from [Scater](https://bioconductor.org/packages/release/bioc/html/scater.html) ([McCarthy DJ, Campbell KR, Lun ATL, Willis QF (2017). “Scater: pre-processing, quality control, normalisation and visualisation of single-cell RNA-seq data in R.” Bioinformatics, 33, 1179-1186.](https://doi.org/10.1093/bioinformatics/btw777)), `tSNE` and `UMAP`. 
+
+![](ui_screenshots/FS_1_select_1.png)
+
+![](ui_screenshots/DR_1_select_2.png)
+
+'Dimensionality Reduction' tab can be opened up by clicking on the 'Feature Selection & Dimensionality Reduction' in the top menu and then selecting the 'Dimensionality Reduction' tab.
+
+![](ui_screenshots/DR_2_overview.png)
+
+The 'Dimensionality Reduction' tab is divided into two parts , a) options for dimensionality reduction, and b) list of available reducedDims and options for removal of a reducedDim.
+
+## a) Options
+
+![](ui_screenshots/DR_2_overview.png)
+
+An `assay` against which the dimensionality reduction should be computed can be selected from the dropdown menu of available `assays` and the required method can be chosen from the 'Method' dropdown. The name for this `reducedDim` can be set in options as well.
+
+![](ui_screenshots/DR_3_methods.png)
+
+Available methods for the computation of dimensionality reduction are `PCA`, `tSNE` and `UMAP`. 
+
+## b) Available reducedDims and Removal
+
+![](ui_screenshots/DR_4_usage.png)
+
+Available `reducedDims` can be viewed in the 'Available Reduced Dims' section in (b) and if required, a computed `reducedDim` can be removed as well by selecting the appropriate `reducedDim` and clicking the 'Delete' button.

@@ -1,0 +1,46 @@
+---
+title: "Feature Selection"
+author: "Irzam Sarfraz"
+---
+```{r develSetting, include=FALSE}
+doEval = TRUE
+```
+## Introduction
+Selection of the most relevant features can be done so by identifying the highly variable genes and consequent using them in the downstream analysis. `singleCellTK` offers methods from [Seurat](https://satijalab.org/seurat/) ([Butler et al., Nature Biotechnology 2018](https://www.nature.com/articles/nbt.4096) & [Stuart*, Butler*, et al., Cell 2019](https://www.cell.com/cell/fulltext/S0092-8674(19)30559-8)) and [Scran](https://bioconductor.org/packages/release/bioc/html/scran.html) ([Lun ATL, McCarthy DJ, Marioni JC (2016). “A step-by-step workflow for low-level analysis of single-cell RNA-seq data with Bioconductor.” F1000Res., 5, 2122.](https://doi.org/10.12688/f1000research.9501.2)) packages to identify these genes and then plots them accordingly.
+
+![](ui_screenshots/FS_1_select_1.png)
+
+![](ui_screenshots/FS_1_select_2.png)
+
+'Feature Selection' tab can be opened up by clicking on the 'Feature Selection & Dimensionality Reduction' in the top menu and then selecting the 'Feature Selection' tab.
+
+![](ui_screenshots/FS_2_overview.png)
+
+The 'Feature Selection' tab is divided into three windows namely, a) Compute HVG, b) Display HVG, and c) Plot.
+
+## a) Compute HVG
+
+![](ui_screenshots/FS_4_computeHVG.png)
+
+The 'Compute HVG' window allows the processing of highly variable genes by selecting an appropriate method either from `Seurat` (`vst`, `mean.var.plot`, `dispersion`) or `Scran` (`modelGeneVar`) packages.
+
+![](ui_screenshots/FS_3_methods.png)
+
+A numeric value indicating the number of features to identify must be set (default is `2000`) and an `assay` must be selected from the list of available `assays`.
+
+## b) Display HVG
+
+![](ui_screenshots/FS_5_display.png)
+
+Once the highly variable genes have been computed in (a), names of a subset of all of these identified genes can be displayed in this section. A numeric value (default is `100`) can be input to set the number of genes that should be displayed in (b) and labeled in the plot (c).
+
+## c) Plot
+
+![](ui_screenshots/FS_6_plot.png)
+
+A plot is generated against the HVG computation in (a) and the number of genes to display set in (b) are labeled over corresponding data points in the plot.
+
+
+
+
+
