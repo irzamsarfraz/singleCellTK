@@ -16,11 +16,10 @@ below:
 
 | Package | Method         |             Citation                                                                |
 | :-----: | :----:         | :---                                                                                |
-| Seurat  | LogNormalize   | Butler et al., Nature Biotechnology 2018.  and  Stuart*, Butler*, et al., Cell 2019 |
-|         | CLR            |                                                                                     |
-|         | RC             |                                                                                     |
-|         | SCTransform    | Christoph Hafemeister et al. Genome Biology 2019                                    |
-| Scater  | LogNormCounts  | Davis J McCarthy et al. Bioinformatics 2017                                         |
+| Seurat  | vst            | Butler et al., Nature Biotechnology 2018.  and  Stuart*, Butler*, et al., Cell 2019 |
+|         | mean.var.plot  |                                                                                     |
+|         | dispersion     |                                                                                     |
+| Scran   | modelGeneVar   | Lun ATL et al., F1000Res. 2016                                                      |
 
 ## Workflow
 
