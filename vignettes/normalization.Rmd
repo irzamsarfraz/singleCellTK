@@ -1,0 +1,117 @@
+---
+title: "Normalization"
+author: "Irzam Sarfraz"
+---
+
+## Introduction
+
+Normalization can be carried out through one of the several methods
+implemented from multiple packages and integrated with SCTK. In general, all
+normalization methods available with SCTK use a `SingleCellExperiment` object
+as an input, which normalize a specified assay and return a `SingleCellExperiment`
+object with the normalized assay stored within this object.
+
+More details about the normalization methods available with SCTK are given
+below:
+
+| Package | Method         |             Citation                                                                |
+| :-----: | :----:         | :---                                                                                |
+| Seurat  | LogNormalize   | Butler et al., Nature Biotechnology 2018.  and  Stuart*, Butler*, et al., Cell 2019 |
+|         | CLR            |                                                                                     |
+|         | RC             |                                                                                     |
+|         | SCTransform    | Christoph Hafemeister et al. Genome Biology 2019                                    |
+| Scater  | LogNormCounts  | Davis J McCarthy et al. Bioinformatics 2017                                         |
+
+## Workflow
+
+### Methods & Parameters
+
+Below we briefly describe the normalization methods available with SCTK and their parameters. All methods use `SingleCellExperiment` object as the input and return the same after storing the normalized assay back into the object.
+
+The `seuratNormalizeData` method is a wrapper for normalization algorithms included with `seurat`
+package. The function takes in a `SingleCellExperiment` object against the `inSCE` parameter and
+the assay that is to be normalized should be specified against the `useAssay` parameter. The
+new name for the normalized assay is defined against `normAssayName` parameter. `normalizationMethod`
+parameter specifies which algorithm to use for normalization. The available methods include
+`LogNormalize`, `RC` and `CLR`. The `scaleFactor` parameter defines the cell-level scaling factor
+which is by default set to `10000`.
+
+```{R eval = FALSE}
+sce <- seuratNormalizeData(
+  inSCE = sce,
+  useAssay = "counts",
+  normAssayName = "seuratNormalize",
+  normalizationMethod = "LogNormalize",
+  scaleFactor = 10000
+)
+```
+
+The `seuratSCTransform` method normalizes/transforms data using `sctransform` algorithm proposed
+by Christoph Hafemeister et al. As with other methods, this wrapper method takes input a
+`SingleCellExperiment` object and returns the same. Parameters other then the `SingleCellExperiment`
+input object are `useAssay` to define the assay that should be used for normalization and
+`normAssayName` used to define the name of the new assay.
+
+```{R eval = FALSE}
+sce <- seuratSCTransform(
+  inSCE = sce,
+  useAssay = "counts",
+  normAssayName = "SCTCounts"
+)
+```
+
+The `scater_logNormCounts` method uses log-normalization to transform the data and is a
+wrapper to the `scater` function. Input values to the method include a `SingleCellExperiment`
+object against `inSCE` parameter which contains the data, `useAssay` parameter which specifies
+the assay to normalize in the object and the new assay name represented by `logAssayName`
+parameter.
+
+```{R eval = FALSE}
+sce <- scater_logNormCounts(
+  inSCE = sce,
+  useAssay = "counts",
+  logAssayName = "scaterLogCounts"
+)
+```
+
+In all cases, the returned `SingleCellExperiment` object will contain the normalized assay defined
+by the `useAssay` parameter.
+
+### Example
+
+We now illustrate the use of normalization methods available with SCTK using 'PBMC3K' dataset from '10X' by utilizing the SCTK import methods:
+
+```{R eval=TRUE, message=FALSE, warning=FALSE, cache=TRUE, fig.align="center", results='hide'}
+library(singleCellTK)
+#import PBMC3K dataset
+pbmc3k <- importExampleData("pbmc3k")
+
+#normalize using scater logNormCounts wrapper in SCTK
+pbmc3k <- scater_logNormCounts(
+  inSCE = pbmc3k,
+  useAssay = "counts",
+  logAssayName = "scaterLogNormCounts"
+)
+
+#normalize using Seurat methods wrapper in SCTK
+pbmc3k <- seuratNormalizeData(
+  inSCE = pbmc3k,
+  useAssay = "counts",
+  normAssayName = "seuratNormalizeData",
+  normalizationMethod = "LogNormalize",
+  scaleFactor = 10000
+)
+
+#normalize using SCTransform wrapper in SCTK
+pbmc3k <- seuratSCTransform(
+  inSCE = pbmc3k,
+  useAssay = "counts",
+  normAssayName = "scTransformNormalizeData"
+)
+```
+
+We now display the `SingleCellExperiment` object to ensure the presence of normalized assays in the object:
+
+```{R de_prep, eval=TRUE, message=FALSE, warning=FALSE, cache=TRUE}
+print(pbmc3k)
+```

@@ -1,0 +1,133 @@
+---
+title: "Feature Selection"
+author: "Irzam Sarfraz"
+---
+
+## Introduction
+
+Feature selection or the identification of highly variable genes (HVG) can be carried out in SCTK using one of the two wrapper functions. The first wrapper function `seuratFindHVG` integrates the feature selection algorithms available with `seurat` and the second wrapper function `scran_modelGeneVar` facilitates feature selection from `scran` package.
+
+Both of these wrapper functions store the computations into the input `SingleCellExperiment` object. To retrieve a list of the identified highly variable genes from any of the algorithms available with these functions, a call to `getTopHVG` must be made. 
+
+To plot these highly variable genes, we make use of the `ggplot` package and offer a wrapper function for plotting the variable genes with labels.
+
+More details about the normalization methods available with SCTK are given
+below:
+
+| Package | Method         |             Citation                                                                |
+| :-----: | :----:         | :---                                                                                |
+| Seurat  | LogNormalize   | Butler et al., Nature Biotechnology 2018.  and  Stuart*, Butler*, et al., Cell 2019 |
+|         | CLR            |                                                                                     |
+|         | RC             |                                                                                     |
+|         | SCTransform    | Christoph Hafemeister et al. Genome Biology 2019                                    |
+| Scater  | LogNormCounts  | Davis J McCarthy et al. Bioinformatics 2017                                         |
+
+## Workflow
+
+### Methods & Parameters
+
+Below we briefly describe the feature selection methods available with SCTK and their parameters. All methods use `SingleCellExperiment` object as the input and return the same after storing the necessary computations back into the object.
+
+#### Feature Selection Methods
+
+The `seuratFindHVG` method is a wrapper function for all feature selection algorithms included with `seurat` package. The algorithms include `vst`, `dispersion` and `mean.var.plot`. The function takes in input a `SingleCellExperiment` object against the `inSCE` parameter, name of a normalized assay against `useAssay`, name of the algorithm against `hvgMethod` parameter and a numeric value specifying the number of genes to identify as highly variable against the `hvgNumber` parameter. The computations are stored in the `rowData` of the input object.
+
+```{R eval = FALSE}
+sce <- seuratFindHVG(
+  inSCE = sce,
+  useAssay = "normalizedCounts",
+  hvgMethod = "vst",
+  hvgNumber = 2000
+)
+```
+
+The `scran_modelGeneVar` method serves as a wrapper for the `modelGeneVar` algorithm from `scran` package. This function also takes in a `SingleCellExperiment` object as input and the `assayName` parameter specifies the name of the assay that should be used to compute the variable genes. The computations are stored back into the `rowData` of the input object.
+
+```{R eval = FALSE}
+sce <- scran_modelGeneVar(
+  inSCE = sce,
+  assayName = "counts"
+)
+```
+
+#### Method for retrieving names of identified features
+
+The `getTopHVG` method extracts the names of the highly variable genes identified by a particular algorithm run above. Before running this function, the necessary computations must be stored in the `rowData` of the input object as carried out by one of the methods above. The function takes in a `SingleCellExperiment` object with computations stored in the `rowData` against the `inSCE` parameter, name of the method for variable gene extraction from either `vst`, `mean.var.plot`, `dispersion` or `modelGeneVar` against the `method` parameter, and a numeric value against the `n` parameter which indicates the number of gene names to extract.
+
+```{R eval = FALSE}
+topHVG <- getTopHVG(
+  inSCE = sce,
+  method = "vst",
+  n = 10
+)
+```
+
+#### Method for plotting the highly variable genes
+The `plotTopHVG` method plots the highly variable genes by using the computations stored in the input
+`SingleCellExperiment` object against the `inSCE` parameter. The input object must have computations stored
+against a particular algorithm by using one of the two HVG computation functions described above. The algorithm
+used for computation must be specified against the `method` parameter and a character list of gene names can
+be specified against the `hvgList` parameter that should be labeled.
+
+```{R eval = FALSE}
+plotTopHVG(
+  inSCE = sce,
+  method = "vst",
+  hvgList = c("FOS", "ERBB4", "SCD", "SGPL1", "EGR1")
+)
+```
+
+## Example
+We show the use of the feature selection methods with the 'PBMC3K' dataset from '10x' by utilizing the available SCTK methods.
+
+Importing data and normalizing the "counts" assay:
+
+```{R eval=TRUE, message=FALSE, warning=FALSE, cache=TRUE, fig.align="center", results='hide'}
+library(singleCellTK)
+#import PBMC3K dataset
+pbmc3k <- importExampleData("pbmc3k")
+
+#normalize using Seurat methods wrapper in SCTK
+pbmc3k <- seuratNormalizeData(
+  inSCE = pbmc3k,
+  useAssay = "counts",
+  normAssayName = "seuratNormalizeData",
+  normalizationMethod = "LogNormalize",
+  scaleFactor = 10000
+)
+```
+
+Compute the highly variable genes:
+
+```{R eval=TRUE, message=FALSE, warning=FALSE, cache=TRUE}
+#run feature selection 'vst' algorithm using 'seuratFindHVG' function
+pbmc3k <- seuratFindHVG(
+  inSCE = pbmc3k,
+  useAssay = "seuratNormalizeData",
+  hvgMethod = "vst",
+  hvgNumber = 2000
+)
+```
+
+Get the top 10 highly variable gene names:
+
+```{R eval=TRUE, message=FALSE, warning=FALSE, cache=TRUE}
+top10 <- getTopHVG(
+  inSCE = pbmc3k,
+  method = "vst",
+  n = 10
+)
+print(top10)
+```
+
+Plot the highly variable genes:
+```{R eval=TRUE, cache=TRUE, fig.align="center", fig.width=9, fig.height=6, warning=FALSE, message=FALSE}
+plotTopHVG(
+  inSCE = pbmc3k,
+  method = "vst",
+  hvgList = top10
+)
+```
+
+Overall, the process completes in three steps, briefly the computation and storage of statistics into
+the input object, extraction of top genes and finally plotting these top genes.
