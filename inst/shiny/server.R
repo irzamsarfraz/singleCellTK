@@ -204,14 +204,14 @@ shinyServer(function(input, output, session) {
       }
     }
 
-    output[[inputId]] <- renderUI({
-      selectInput(
-        inputId = inputId,
-        label = label,
-        choices = choices,
-        selected = selected
-      )
-    })
+    # output[[inputId]] <- renderUI({
+    #   selectInput(
+    #     inputId = inputId,
+    #     label = label,
+    #     choices = choices,
+    #     selected = selected
+    #   )
+    # })
   }
   
   observeEvent(input$hvgMethodFS,{
@@ -248,7 +248,10 @@ shinyServer(function(input, output, session) {
     updateSelectInputTag(session, "modifyAssaySelect")
     updateSelectInputTag(session, "normalizeAssaySelect", label = "Select assay to normalize:", recommended = "raw")
 
-    updateSelectInputTag(session, "seuratSelectNormalizationAssay", choices = currassays, showTags = FALSE)
+    
+    #updateSelectInputTag(session, "seuratSelectNormalizationAssay", choices = currassays, showTags = FALSE)
+    updateSelectInput(session, inputId = "seuratSelectNormalizationAssay", choices = assayNames(vals$counts))
+    
     if(input$hvgMethodFS == "vst"){
       updateSelectInputTag(session, "assaySelectFS_Norm", recommended = c("raw"))
     }
